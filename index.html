@@ -9,54 +9,22 @@
   <body>
     <div class="container">
       <ul class="comments" id="comment-id">
-        <li class="comment">
-          <div class="comment-header">
-            <div>Глеб Фокин</div>
-            <div>12.02.22 12:18</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              Это будет первый комментарий на этой странице
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">3</span>
-              <button class="like-button"></button>
-            </div>
-          </div>
-        </li>
-        <li class="comment">
-          <div class="comment-header">
-            <div>Варвара Н.</div>
-            <div>13.02.22 19:22</div>
-          </div>=
-          <div class="comment-body">
-            <div class="comment-text">
-              Мне нравится как оформлена эта страница! ❤
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">75</span>
-              <button class="like-button -active-like"></button>
-            </div>
-          </div>
-        </li>
       </ul>
-      <div class="add-form">
+        <li class="add-form">
         <input
-          type="text"
-          class="add-form-name"
-          id="name-input"
-          placeholder="Введите ваше имя"
-       />
-        <textarea
-          type="textarea"
-          class="add-form-text"
-          id="comment-input"
-          placeholder="Введите ваш коментарий"
-          rows="4"
+         type="text"
+         class="add-form-name"
+         id="name-input"
+         placeholder="Введите ваше имя"
+
+        />
+        <textarea 
+        type="textarea"
+        class="add-form-button"
+        id="comment-input"
+        placeholder="Введите ваш коментарий"
+         rows="4"
+         aria-valuetext=""
         ></textarea>
         <div class="add-form-row">
           <button class="add-form-button" id="add-button">Написать</button>
@@ -66,43 +34,108 @@
   </body>
 
   <script>
+
+  "use strict";
+
     const buttonElement = document.getElementById(`add-button`);
-    const commentElement = document.getElementById(`comment-id`);
-    const commentInputElement = document.getElementById(`comment-input`);
+    const commentElement = document.getElementById (`comment-id`);
     const nameInputElement = document.getElementById(`name-input`);
+    const commentInputElement = document.getElementById(`comment-input`);
    const newDate = new Date()
+   const listElement =document.getElementById(`comment-id`);
 
-    buttonElement.addEventListener("click", () => {
-      nameInputElement.classList.remove(`error`);
-      commentInputElement.classList.remove(`error`);
+   const comments =[
+    {       
+    name: "Глеб Фокин",
+    date: `12.02.22 12:18`,
+    text: `Это будет первый комментарий на этой странице`,
+    like: 3,
+    isLiked: false
+   },
+   {
+    name: "Варвара Н.",
+    date: `13.02.22 19:22`,
+    text: `Мне нравится как оформлена эта страница! ❤`,
+    like: 75,
+    isLiked: false
+   },
+   ];
 
-      if(nameInputElement.value === ""){
-        nameInputElement.classList.add("error");
-        return;
-      }
-      if(commentInputElement.value === ""){
-        commentInputElement.classList.add("error");
-        return;
-      }
+   const renderComment = () => {
+    const commentHtml = comments
 
-    const oldCommentHtml = commentElement.innerHTML;
-    commentElement.innerHTML = oldCommentHtml + `<li class = "comment">
-      <div class = "comment-header">
-        <div>${nameInputElement.value}</div>
-        <div>${newDate}</div>
-      </div>
-      <div class ="comment-doby">
-        <div class ="comment-text">  
-          ${commentInputElement.value}
-        </div>
-      </div>
-      <div class ="comment-footer"> 
-        <div class ="likes"> 
-          <span class ="likes-counter">0</span>
-          <button class="like-button"></button>
-        </div>
-      </div>
-      <li>`;
-      })
+    .map((comment,index)=>{
+return`<li class = "comment"><div class = "comment-header"><dav>${comment.name}</div>
+<div>${comment.date}</div></div>
+<div class = "comment-body">
+  <div class = "comment-text">${comment.text}</div>
+    <div class = "comment-footer">
+      <div class = "likes" >
+        <span class = "likes-counter">${comment.like}</span>
+<button class ="likes-button${comment.isLiked ? `-active-like`:``}" date-index=`${index}`></button></div>
+</div>
+  </li>`;
+    })
+
+    .join("");
+    listElement.innerHTML =commentHtml;
+    initLikeListeners();
+   };
+
+   constinitLikeListener = () => {
+const likeButtons = document.querySelectorAll(".like-button");
+for (const button of likeButtons){
+button.addEventListener(`click`,() =>{
+const index =button.dataset.index;
+comments[index].like += comments[index].isLiked ? -1 : +1;
+comments[index].isLiked = !comments[index].isLiked
+    renderComment();
+   })
+  }
+
+   }
+
+   nameInputElement.addEventListener("input", () => {
+if(nameInputElement.value === "" || commentInputElement.value === ""){
+  buttonElement.classList.add("empty");
+buttonElement.disabled = true;
+   } else if (
+nameInputElement.value !==""&&
+commentInputElement.value !==""
+   ){
+buttonElement.classList.remove("empty");
+buttonElement.disabled = false
+   }
+   });
+commentInputElement.addEventListener("input",() =>{
+if(commentInputElement.value === "" || nametInputElement === ""){
+  buttonElement.classList.add("empty");
+buttonElement.disabled = true;
+} else if(
+  commentInputElement.value !==""&&
+nameInputElement.value !==""
+){
+  buttonElement.classList.remove("empty");
+buttonElement.disabled = false;
+}
+})
+const addNewComment =() =>{
+  comments.push({
+    name: nameInputElement.value,
+    date: new Date (),
+    text: commentInputElement.value,
+    like: 0,
+    isLiked: false,
+  })
+  nameInputElement.value ="";
+  commentInputElement.value ="";
+
+  renderComment();
+}
+buttonElement.addEventListener("click", addNewComment)
+
+
+  renderComment();
+  
   </script>
 </html>
