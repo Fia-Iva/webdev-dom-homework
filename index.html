@@ -72,12 +72,12 @@ return`<li class = "comment"><div class = "comment-header"><dav>${comment.name}<
     <div class = "comment-footer">
       <div class = "likes" >
         <span class = "likes-counter">${comment.like}</span>
-<button class ="likes-button${comment.isLiked ? `-active-like`:``}" date-index=`${index}`></button></div>
+<button class ="likes-button ${comment.isLiked ? `-active-like`:``}" date-index="${index}"></button></div>
 </div>
   </li>`;
     })
 
-    .join("");
+    .join ("");
     listElement.innerHTML =commentHtml;
     initLikeListeners();
    };
@@ -85,7 +85,7 @@ return`<li class = "comment"><div class = "comment-header"><dav>${comment.name}<
    constinitLikeListener = () => {
 const likeButtons = document.querySelectorAll(".like-button");
 for (const button of likeButtons){
-button.addEventListener(`click`,() =>{
+button.addEventListener (`click`,() =>{
 const index =button.dataset.index;
 comments[index].like += comments[index].isLiked ? -1 : +1;
 comments[index].isLiked = !comments[index].isLiked
